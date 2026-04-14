@@ -155,9 +155,13 @@ const StatusBadge = ({ status }) => {
 const UrgencyBadge = ({ urgency }) => {
   if (!urgency) return null;
   let bgColors = "bg-gray-100 text-gray-600 border-gray-300";
-  if (urgency === "High") bgColors = "bg-red-50 text-red-600 border-red-200";
-  if (urgency === "Medium") bgColors = "bg-yellow-50 text-yellow-700 border-yellow-200";
-  if (urgency === "Low") bgColors = "bg-green-50 text-green-600 border-green-200";
+  if (urgency === "High") bgColors = "bg-orange-50 text-orange-600 border-orange-200";
+  else if (urgency === "Medium") bgColors = "bg-yellow-50 text-yellow-700 border-yellow-200";
+  else if (urgency === "Normal") bgColors = "bg-teal-50 text-teal-600 border-teal-200";
+  else if (urgency === "Evaluasi") bgColors = "bg-indigo-50 text-indigo-600 border-indigo-200";
+  else if (urgency === "Pending") bgColors = "bg-gray-100 text-gray-600 border-gray-300";
+  else if (urgency === "Urgent") bgColors = "bg-red-50 text-red-600 border-red-200";
+  else if (urgency === "Critical") bgColors = "bg-red-100 text-red-800 border-red-400 font-bold";
 
   return (
     <div className={`mt-1.5 inline-flex items-center mx-auto text-[9px] font-semibold px-2 py-0.5 rounded-full border ${bgColors}`}>

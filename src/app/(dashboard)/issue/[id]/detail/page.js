@@ -194,26 +194,20 @@ export default function DetailIssuePage() {
                 </div>
                 <div>
                   <label className="block text-[13px] text-gray-700 font-bold mb-2">Tingkat Urgensi</label>
-                  <div className="flex bg-white border border-gray-300 rounded-md overflow-hidden">
-                    {["Low", "Medium", "High"].map(level => {
-                      const isActive = urgensi === level;
-                      let bgActive = "bg-blue-500 text-white";
-                      if (level === "High") bgActive = "bg-red-500 text-white";
-                      if (level === "Medium") bgActive = "bg-yellow-500 text-white";
-                      if (level === "Low") bgActive = "bg-green-500 text-white";
-                      
-                      return (
-                        <button
-                          key={level}
-                          type="button"
-                          onClick={() => setUrgensi(level)}
-                          className={`flex-1 py-2.5 text-sm font-medium transition-colors cursor-pointer ${isActive ? bgActive : 'bg-transparent text-gray-600 hover:bg-gray-50'}`}
-                        >
-                          {level}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <select 
+                    value={urgensi}
+                    onChange={(e) => setUrgensi(e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="">Pilih Urgensi</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Evaluasi">Evaluasi</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                    <option value="Critical">Critical</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-[13px] text-gray-700 font-bold mb-2">Deadline</label>

@@ -124,12 +124,17 @@ export default function EditIssuePage() {
                 </div>
                 <div>
                   <label className="block text-[13px] text-gray-700 font-bold mb-2">Kategori Laporan</label>
-                  <input 
+                  <select 
                     name="kategori"
                     value={formData.kategori}
                     onChange={handleChange}
                     className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
+                  >
+                    <option value="">Pilih Kategori</option>
+                    <option value="Pengaduan">Pengaduan</option>
+                    <option value="Permohonan">Permohonan</option>
+                    <option value="Pengembangan Sistem">Pengembangan Sistem</option>
+                  </select>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-[13px] text-gray-700 font-bold mb-2">Judul Laporan</label>
