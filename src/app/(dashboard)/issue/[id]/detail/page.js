@@ -88,26 +88,26 @@ export default function DetailIssuePage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* BREADCRUMB */}
-      <div className="bg-white px-6 md:px-8 py-4 flex items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
-        <Home size={18} className="text-gray-600" />
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline" onClick={() => router.push('/')}>Home</span>
-        <span className="text-gray-300 text-sm font-light">/</span>
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline" onClick={() => router.push('/issue')}>Issue</span>
-        <span className="text-gray-300 text-sm font-light">/</span>
-        <span className="text-gray-500 text-[13px] font-medium">Detail</span>
+      <div className="bg-white px-6 md:px-8 py-4 flex flex-wrap items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
+        <Home size={18} className="text-gray-600 shrink-0" />
+        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/')}>Home</span>
+        <span className="text-gray-300 text-sm font-light shrink-0">/</span>
+        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/issue')}>Issue</span>
+        <span className="text-gray-300 text-sm font-light shrink-0">/</span>
+        <span className="text-gray-500 text-[13px] font-medium whitespace-nowrap">Detail</span>
       </div>
 
       <div className="p-4 md:p-6 lg:p-8 flex-1">
         <div className="w-full max-w-5xl mx-auto">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-start md:items-center gap-3 md:gap-4 mb-6">
             <button 
               onClick={() => router.push('/issue')} 
-              className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors border border-gray-100 cursor-pointer"
+              className="w-10 h-10 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors border border-gray-100 cursor-pointer"
             >
               <ChevronLeft size={20} />
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">Detail Laporan ({issue.id})</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 line-clamp-2 md:line-clamp-1 mt-1.5 md:mt-0">Detail Laporan ({issue.id})</h1>
           </div>
 
           <div className="bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden">
@@ -235,20 +235,22 @@ export default function DetailIssuePage() {
             </div>
 
             {/* ACTION BUTTONS */}
-            <div className="p-6 bg-white border-t border-gray-100 flex flex-wrap items-center justify-end gap-3">
-              <span className="mr-auto text-sm text-gray-500 font-medium">Tindakan Akhir Laporan:</span>
-              <button onClick={() => handleAction("PENDING")} className="px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer">
-                PENDING
-              </button>
-              <button onClick={() => handleAction("DIPROSES")} className="px-5 py-2.5 bg-[#4b8feb] hover:bg-[#3876c9] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer">
-                DIPROSES
-              </button>
-              <button onClick={() => handleAction("SELESAI")} className="px-5 py-2.5 bg-[#2ea64e] hover:bg-[#258a3f] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer">
-                SELESAI
-              </button>
-              <button onClick={() => handleAction("DITOLAK")} className="px-5 py-2.5 bg-[#f44336] hover:bg-[#d32f2f] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer">
-                DITOLAK
-              </button>
+            <div className="p-4 md:p-6 bg-white border-t border-gray-100 flex flex-col md:flex-row flex-wrap items-center justify-end gap-3">
+              <span className="w-full text-center md:text-left md:w-auto md:mr-auto text-sm text-gray-500 font-medium mb-2 md:mb-0">Tindakan Akhir Laporan:</span>
+              <div className="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+                <button onClick={() => handleAction("PENDING")} className="flex-1 md:flex-none px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center">
+                  PENDING
+                </button>
+                <button onClick={() => handleAction("DIPROSES")} className="flex-1 md:flex-none px-5 py-2.5 bg-[#4b8feb] hover:bg-[#3876c9] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center">
+                  DIPROSES
+                </button>
+                <button onClick={() => handleAction("SELESAI")} className="flex-1 md:flex-none px-5 py-2.5 bg-[#2ea64e] hover:bg-[#258a3f] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center">
+                  SELESAI
+                </button>
+                <button onClick={() => handleAction("DITOLAK")} className="flex-1 md:flex-none px-5 py-2.5 bg-[#f44336] hover:bg-[#d32f2f] text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center">
+                  DITOLAK
+                </button>
+              </div>
             </div>
           </div>
         </div>

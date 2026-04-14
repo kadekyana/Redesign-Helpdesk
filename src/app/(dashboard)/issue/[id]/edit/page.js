@@ -68,27 +68,27 @@ export default function EditIssuePage() {
   return (
     <div className="flex flex-col min-h-full">
       {/* BREADCRUMB */}
-      <div className="bg-white px-6 md:px-8 py-4 flex items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
-        <Home size={18} className="text-gray-600" />
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline" onClick={() => router.push('/')}>Home</span>
-        <span className="text-gray-300 text-sm font-light">/</span>
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline" onClick={() => router.push('/issue')}>Issue</span>
-        <span className="text-gray-300 text-sm font-light">/</span>
-        <span className="text-gray-500 text-[13px] font-medium">Edit</span>
+      <div className="bg-white px-6 md:px-8 py-4 flex flex-wrap items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
+        <Home size={18} className="text-gray-600 shrink-0" />
+        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/')}>Home</span>
+        <span className="text-gray-300 text-sm font-light shrink-0">/</span>
+        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/issue')}>Issue</span>
+        <span className="text-gray-300 text-sm font-light shrink-0">/</span>
+        <span className="text-gray-500 text-[13px] font-medium whitespace-nowrap">Edit</span>
       </div>
 
       <div className="p-4 md:p-6 lg:p-8 flex-1">
         <div className="w-full max-w-4xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
+          <div className="flex items-start md:items-center justify-between mb-6">
+            <div className="flex items-start md:items-center gap-3 md:gap-4">
               <button 
                 onClick={() => router.push('/issue')} 
-                className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors border border-gray-100 cursor-pointer"
+                className="w-10 h-10 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors border border-gray-100 cursor-pointer"
               >
                 <ChevronLeft size={20} />
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">Edit Data Laporan ({issueId})</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 line-clamp-2 md:line-clamp-1 mt-1.5 md:mt-0">Edit Data Laporan ({issueId})</h1>
             </div>
           </div>
 
@@ -157,16 +157,16 @@ export default function EditIssuePage() {
               </div>
             </div>
 
-            <div className="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <div className="p-4 md:p-6 bg-gray-50 border-t border-gray-100 flex flex-col-reverse md:flex-row items-center justify-end md:justify-between gap-4">
               <button 
                 onClick={() => router.push('/issue')}
-                className="px-6 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer"
+                className="w-full md:w-auto px-6 py-3 md:py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center"
               >
                 BATAL
               </button>
               <button 
                 onClick={handleSave}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer flex items-center gap-2"
+                className="w-full md:w-auto justify-center px-6 py-3 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer flex items-center gap-2"
               >
                 <Save size={18} /> SIMPAN PERUBAHAN
               </button>

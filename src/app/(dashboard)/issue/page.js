@@ -293,11 +293,11 @@ export default function IssuePage() {
   return (
     <div className="flex flex-col min-h-full relative">
       {/* BREADCRUMB */}
-      <div className="bg-white px-6 md:px-8 py-4 flex items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
-        <Home size={18} className="text-gray-600" />
-        <span className="font-bold text-[13px] text-gray-800">Home</span>
-        <span className="text-gray-300 text-sm font-light">/</span>
-        <span className="text-gray-500 text-[13px] font-medium">Issue</span>
+      <div className="bg-white px-6 md:px-8 py-4 flex flex-wrap items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
+        <Home size={18} className="text-gray-600 shrink-0" />
+        <span className="font-bold text-[13px] text-gray-800 whitespace-nowrap">Home</span>
+        <span className="text-gray-300 text-sm font-light shrink-0">/</span>
+        <span className="text-gray-500 text-[13px] font-medium whitespace-nowrap">Issue</span>
       </div>
 
       <div className="p-4 md:p-6 lg:p-8 flex-1">
@@ -319,9 +319,9 @@ export default function IssuePage() {
                 </div>
               </button>
 
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-gray-800 text-sm">Filter:</span>
-                <div className="relative border-b border-gray-300 w-[200px]">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full md:w-auto">
+                <span className="font-bold text-gray-800 text-sm whitespace-nowrap">Filter:</span>
+                <div className="relative border-b border-gray-300 w-full md:w-[200px]">
                   <input 
                     type="text" 
                     placeholder="Type to filter" 
@@ -457,7 +457,7 @@ export default function IssuePage() {
               <div className="space-y-8">
                 {/* Sistem Informasi */}
                 <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
-                  <label className="text-gray-800 font-medium text-15px w-40 shrink-0 mt-2">Sistem Informasi</label>
+                  <label className="text-gray-800 font-medium text-[15px] w-full md:w-40 shrink-0 md:mt-2">Sistem Informasi</label>
                   <div className="flex-1 w-full">
                     <div className="relative border-b border-gray-400">
                       <select 
@@ -479,7 +479,7 @@ export default function IssuePage() {
 
                 {/* Divisi Terkait */}
                 <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
-                  <label className="text-gray-800 font-medium text-15px w-40 shrink-0 mt-2">Divisi Terkait</label>
+                  <label className="text-gray-800 font-medium text-[15px] w-full md:w-40 shrink-0 md:mt-2">Divisi Terkait</label>
                   <div className="flex-1 w-full">
                     <div className="relative border-b border-gray-400">
                       <select 
@@ -501,7 +501,7 @@ export default function IssuePage() {
 
                 {/* Petugas */}
                 <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
-                  <label className="text-gray-800 font-medium text-15px w-40 shrink-0 mt-2">Petugas</label>
+                  <label className="text-gray-800 font-medium text-[15px] w-full md:w-40 shrink-0 md:mt-2">Petugas</label>
                   <div className="flex-1 w-full">
                     <div className="relative border-b border-gray-400">
                       <select 
