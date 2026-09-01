@@ -52,14 +52,14 @@ export default function LoginPage() {
         {/* === SISI KANAN (Form Login) === */}
         <div className="w-full md:flex-1 flex flex-col justify-center relative px-8 lg:px-16 pt-10 pb-16">
           
-          <div className="w-full max-w-[380px] mx-auto flex flex-col items-center mb-8">
-            <div className="relative w-[250px] h-[100px] mb-4">
+          <div className="w-full max-w-[380px] mx-auto flex flex-col items-center mb-6">
+            <div className="relative w-20 h-20 mb-3">
               <Image
-                src="/logo-undiksha.svg"
+                src="/undiksha-logo.svg"
                 alt="Logo Undiksha"
                 fill
                 className="object-contain"
-                unoptimized
+                priority
               />
             </div>
             <h2 className="text-[25px] font-bold text-gray-900 leading-tight">Selamat Datang</h2>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                     type="checkbox"
                     className="w-7 h-7 border-2 border-gray-300 rounded-[2px] cursor-pointer bg-white"
                   />
-                  <span className="text-[14px] text-[#222] font-medium tracking-wide">I'm not a robot</span>
+                  <span className="text-[14px] text-[#222] font-medium tracking-wide">I&apos;m not a robot</span>
                 </div>
                 <div className="flex flex-col items-center justify-center pt-1 mr-1">
                   <Image

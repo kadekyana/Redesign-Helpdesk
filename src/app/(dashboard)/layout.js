@@ -51,13 +51,13 @@ export default function DashboardLayout({ children }) {
             <Menu size={28} />
           </button>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 relative flex items-center justify-center overflow-hidden">
+            <div className="w-9 h-9 relative flex items-center justify-center shrink-0">
               <Image
-                src="/logo-undiksha.svg"
+                src="/undiksha-logo.svg"
                 alt="Logo Undiksha"
                 fill
                 className="object-contain"
-                unoptimized
+                priority
               />
             </div>
             <span className="font-bold text-lg tracking-wide">MISSU</span>
