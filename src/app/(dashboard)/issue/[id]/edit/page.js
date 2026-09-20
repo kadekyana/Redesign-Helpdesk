@@ -1,8 +1,116 @@
 "use client";
 
 import { Home, ChevronLeft, Save } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import SuccessModal from "@/components/SuccessModal";
+import { useMounted } from "@/hooks/useMounted";
+import { useIssues } from "@/hooks/useIssues";
+
+function EditForm({ issue, onSave, onCancel }) {
+  const [formData, setFormData] = useState({
+    pengirim: issue?.pengirim || "",
+    noWa: issue?.noWa || "",
+    email: issue?.email || "",
+    title: issue?.title || "",
+    kategori: issue?.kategori || "",
+    deskripsiMasalah: issue?.deskripsiMasalah || "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden">
+      <div className="p-6 md:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Nama Pengirim</label>
+            <input
+              name="pengirim"
+              value={formData.pengirim}
+              onChange={handleChange}
+              className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Email</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Nomor WhatsApp</label>
+            <input
+              name="noWa"
+              value={formData.noWa}
+              onChange={handleChange}
+              className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Kategori Laporan</label>
+            <select
+              name="kategori"
+              value={formData.kategori}
+              onChange={handleChange}
+              className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
+            >
+              <option value="">Pilih Kategori</option>
+              <option value="Pengaduan">Pengaduan</option>
+              <option value="Permohonan">Permohonan</option>
+              <option value="Pengembangan Sistem">Pengembangan Sistem</option>
+            </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Judul Laporan</label>
+            <input
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-[13px] text-gray-700 font-bold mb-2">Deskripsi Masalah</label>
+            <textarea
+              name="deskripsiMasalah"
+              value={formData.deskripsiMasalah}
+              onChange={handleChange}
+              className="w-full min-h-[140px] resize-y bg-white border border-gray-300 rounded-md px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 md:p-6 bg-gray-50 border-t border-gray-100 flex flex-col-reverse md:flex-row items-center justify-end md:justify-between gap-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="w-full md:w-auto px-6 py-3 md:py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center"
+        >
+          BATAL
+        </button>
+        <button
+          type="submit"
+          className="w-full md:w-auto justify-center px-6 py-3 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer flex items-center gap-2"
+        >
+          <Save size={18} /> SIMPAN PERUBAHAN
+        </button>
+      </div>
+    </form>
+  );
+}
 
 export default function EditIssuePage() {
   const router = useRouter();
@@ -10,57 +118,27 @@ export default function EditIssuePage() {
   const rawId = params?.id;
   const issueId = typeof rawId === "string" ? decodeURIComponent(rawId) : "";
 
-  const [mounted, setMounted] = useState(false);
-  const [issuesData, setIssuesData] = useState([]);
-  
-  const [formData, setFormData] = useState({
-    pengirim: "",
-    noWa: "",
-    email: "",
-    title: "",
-    kategori: "",
-    deskripsiMasalah: ""
-  });
+  const mounted = useMounted();
+  const [issuesData, setIssuesData] = useIssues();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [savedPreview, setSavedPreview] = useState(null);
 
-  useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem("missu_issues");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setIssuesData(parsed);
-      const found = parsed.find(i => i.id === issueId);
-      if (found) {
-        setFormData({
-          pengirim: found.pengirim || "",
-          noWa: found.noWa || "",
-          email: found.email || "",
-          title: found.title || "",
-          kategori: found.kategori || "",
-          deskripsiMasalah: found.deskripsiMasalah || ""
-        });
-      }
-    }
-  }, [issueId]);
+  const foundIssue = issuesData.find((i) => i.id === issueId);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = () => {
-    const updated = issuesData.map(i => {
+  const handleSave = (newFormData) => {
+    const updated = issuesData.map((i) => {
       if (i.id === issueId) {
         return {
           ...i,
-          ...formData
+          ...newFormData,
         };
       }
       return i;
     });
 
-    localStorage.setItem("missu_issues", JSON.stringify(updated));
-    alert("Berhasil menyimpan perubahan data issue!");
-    router.push("/issue");
+    setIssuesData(updated);
+    setSavedPreview(newFormData);
+    setShowSuccessModal(true);
   };
 
   if (!mounted) return null;
@@ -70,11 +148,23 @@ export default function EditIssuePage() {
       {/* BREADCRUMB */}
       <div className="bg-white px-6 md:px-8 py-4 flex flex-wrap items-center gap-2 text-gray-800 border-b border-gray-200 shadow-[0_2px_4px_rgba(0,0,0,0.01)]">
         <Home size={18} className="text-gray-600 shrink-0" />
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/')}>Home</span>
+        <span
+          className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap"
+          onClick={() => router.push("/")}
+        >
+          Home
+        </span>
         <span className="text-gray-300 text-sm font-light shrink-0">/</span>
-        <span className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap" onClick={() => router.push('/issue')}>Issue</span>
+        <span
+          className="font-bold text-[13px] text-gray-800 cursor-pointer hover:underline whitespace-nowrap"
+          onClick={() => router.push("/issue")}
+        >
+          Issue
+        </span>
         <span className="text-gray-300 text-sm font-light shrink-0">/</span>
-        <span className="text-gray-500 text-[13px] font-medium whitespace-nowrap">Edit</span>
+        <span className="text-gray-500 text-[13px] font-medium whitespace-nowrap">
+          Edit
+        </span>
       </div>
 
       <div className="p-4 md:p-6 lg:p-8 flex-1">
@@ -82,98 +172,63 @@ export default function EditIssuePage() {
           {/* Header */}
           <div className="flex items-start md:items-center justify-between mb-6">
             <div className="flex items-start md:items-center gap-3 md:gap-4">
-              <button 
-                onClick={() => router.push('/issue')} 
+              <button
+                onClick={() => router.push("/issue")}
                 className="w-10 h-10 shrink-0 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors border border-gray-100 cursor-pointer"
               >
                 <ChevronLeft size={20} />
               </button>
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900 line-clamp-2 md:line-clamp-1 mt-1.5 md:mt-0">Edit Data Laporan ({issueId})</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 line-clamp-2 md:line-clamp-1 mt-1.5 md:mt-0">
+                Edit Data Laporan ({issueId})
+              </h1>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-gray-100 overflow-hidden">
-            <div className="p-6 md:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Nama Pengirim</label>
-                  <input 
-                    name="pengirim"
-                    value={formData.pengirim}
-                    onChange={handleChange}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Email</label>
-                  <input 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Nomor WhatsApp</label>
-                  <input 
-                    name="noWa"
-                    value={formData.noWa}
-                    onChange={handleChange}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Kategori Laporan</label>
-                  <select 
-                    name="kategori"
-                    value={formData.kategori}
-                    onChange={handleChange}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="">Pilih Kategori</option>
-                    <option value="Pengaduan">Pengaduan</option>
-                    <option value="Permohonan">Permohonan</option>
-                    <option value="Pengembangan Sistem">Pengembangan Sistem</option>
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Judul Laporan</label>
-                  <input 
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-[13px] text-gray-700 font-bold mb-2">Deskripsi Masalah</label>
-                  <textarea 
-                    name="deskripsiMasalah"
-                    value={formData.deskripsiMasalah}
-                    onChange={handleChange}
-                    className="w-full min-h-[140px] resize-y bg-white border border-gray-300 rounded-md px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  ></textarea>
-                </div>
-              </div>
+          {foundIssue ? (
+            <EditForm
+              key={foundIssue.id}
+              issue={foundIssue}
+              onSave={handleSave}
+              onCancel={() => router.push("/issue")}
+            />
+          ) : (
+            <div className="bg-white rounded-xl p-8 text-center text-gray-500 border border-gray-100">
+              Data issue tidak ditemukan atau sedang dimuat...
             </div>
-
-            <div className="p-4 md:p-6 bg-gray-50 border-t border-gray-100 flex flex-col-reverse md:flex-row items-center justify-end md:justify-between gap-4">
-              <button 
-                onClick={() => router.push('/issue')}
-                className="w-full md:w-auto px-6 py-3 md:py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer text-center"
-              >
-                BATAL
-              </button>
-              <button 
-                onClick={handleSave}
-                className="w-full md:w-auto justify-center px-6 py-3 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-md transition-colors shadow-sm cursor-pointer flex items-center gap-2"
-              >
-                <Save size={18} /> SIMPAN PERUBAHAN
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
+
+      {/* MODAL KONFIRMASI BERHASIL SIMPAN PERUBAHAN */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="Perubahan Berhasil Disimpan!"
+        message={`Data issue ${issueId} telah berhasil diperbarui ke dalam sistem MISSU.`}
+        badgeText="Update Berhasil"
+        details={[
+          { label: "ID Ticket", value: issueId },
+          { label: "Judul", value: savedPreview?.title || foundIssue?.title },
+          { label: "Kategori", value: savedPreview?.kategori || foundIssue?.kategori },
+          { label: "Pengirim", value: savedPreview?.pengirim || foundIssue?.pengirim },
+          {
+            label: "Waktu Update",
+            value:
+              new Date().toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }) + " WITA",
+          },
+        ]}
+        primaryAction={{
+          text: "Kembali ke Daftar Issue",
+          onClick: () => router.push("/issue"),
+        }}
+        secondaryAction={{
+          text: "Tetap di Halaman Ini",
+          onClick: () => setShowSuccessModal(false),
+        }}
+      />
     </div>
   );
 }

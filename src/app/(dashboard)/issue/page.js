@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import SuccessModal from "@/components/SuccessModal";
+import { useMounted } from "@/hooks/useMounted";
+import { useIssues } from "@/hooks/useIssues";
 
 const CardHeader = ({ title }) => (
   <div className="flex items-center justify-between mb-6">
@@ -193,37 +197,40 @@ const UrgencyBadge = ({ urgency }) => {
 
 export default function IssuePage() {
   const router = useRouter();
-  const [issues, setIssues] = useState([]);
+  const [issues, setIssues] = useIssues(defaultIssues);
   const [filterText, setFilterText] = useState("");
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeIssueId, setActiveIssueId] = useState(null);
+  const [showSuccessPenugasanModal, setShowSuccessPenugasanModal] = useState(false);
+  const [assignedSuccessData, setAssignedSuccessData] = useState(null);
+
+  // Delete Confirmation Modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteCandidateId, setDeleteCandidateId] = useState(null);
 
   const [penugasanForm, setPenugasanForm] = useState({
+    unitTujuan: "",
     sistemInformasi: "",
     divisiTerkait: "",
     petugas: "",
     catatan: "",
   });
 
-  useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem("missu_issues");
-    if (stored) {
-      setIssues(JSON.parse(stored));
-    } else {
-      setIssues(defaultIssues);
-      localStorage.setItem("missu_issues", JSON.stringify(defaultIssues));
-    }
-  }, []);
+  const handleDeleteClick = (id) => {
+    setDeleteCandidateId(id);
+    setShowDeleteModal(true);
+  };
 
-  const handleDelete = (id) => {
-    if (!window.confirm("Apakah anda yakin ingin menghapus issue ini?")) return;
-    const updated = issues.filter((i) => i.id !== id);
+  const handleConfirmDelete = () => {
+    if (!deleteCandidateId) return;
+    const updated = issues.filter((i) => i.id !== deleteCandidateId);
     setIssues(updated);
     localStorage.setItem("missu_issues", JSON.stringify(updated));
+    setShowDeleteModal(false);
+    setDeleteCandidateId(null);
   };
 
   const handleToggleStatus = (id) => {
@@ -272,16 +279,24 @@ export default function IssuePage() {
     if (issue && issue.assignment) {
       if (typeof issue.assignment === "string") {
         setPenugasanForm({
+          unitTujuan: "",
           sistemInformasi: "",
           divisiTerkait: "",
           petugas: issue.assignment === "TUGASKAN" ? "" : issue.assignment,
           catatan: "",
         });
       } else {
-        setPenugasanForm(issue.assignment);
+        setPenugasanForm({
+          unitTujuan: issue.assignment.unitTujuan || issue.assignment.divisiTerkait || "",
+          sistemInformasi: issue.assignment.sistemInformasi || "",
+          divisiTerkait: issue.assignment.divisiTerkait || "",
+          petugas: issue.assignment.petugas || "",
+          catatan: issue.assignment.catatan || "",
+        });
       }
     } else {
       setPenugasanForm({
+        unitTujuan: "",
         sistemInformasi: "",
         divisiTerkait: "",
         petugas: "",
@@ -297,15 +312,39 @@ export default function IssuePage() {
   };
 
   const handleSavePenugasan = () => {
+    const currentTicketId = activeIssueId;
+    const finalUnit = penugasanForm.unitTujuan || "UPT TIK";
+    const finalPetugas = penugasanForm.petugas || "Petugas Terkait";
+    const finalCatatan = penugasanForm.catatan || "";
+
     const updated = issues.map((issue) => {
-      if (issue.id === activeIssueId) {
-        return { ...issue, assignment: penugasanForm };
+      if (issue.id === currentTicketId) {
+        return {
+          ...issue,
+          status: issue.status === "PENDING" ? "DIPROSES" : issue.status,
+          assignment: {
+            ...penugasanForm,
+            unitTujuan: finalUnit,
+            petugas: finalPetugas,
+            catatan: finalCatatan,
+          },
+        };
       }
       return issue;
     });
+
     setIssues(updated);
     localStorage.setItem("missu_issues", JSON.stringify(updated));
+
+    setAssignedSuccessData({
+      id: currentTicketId,
+      unitTujuan: finalUnit,
+      petugas: finalPetugas,
+      catatan: finalCatatan || "Tidak ada catatan tambahan",
+    });
+
     closePenugasanModal();
+    setShowSuccessPenugasanModal(true);
   };
 
   const filteredIssues = issues.filter(
@@ -498,7 +537,7 @@ export default function IssuePage() {
                               <Pencil size={15} strokeWidth={2.5} />
                             </button>
                             <button
-                              onClick={() => handleDelete(issue.id)}
+                              onClick={() => handleDeleteClick(issue.id)}
                               className="w-8 h-8 rounded bg-[#f44336] hover:bg-[#d32f2f] text-white flex items-center justify-center transition-colors cursor-pointer"
                               title="Hapus"
                             >
@@ -657,6 +696,46 @@ export default function IssuePage() {
           </div>
         </div>
       )}
+
+      {/* MODAL SUKSES PENUGASAN */}
+      <SuccessModal
+        isOpen={showSuccessPenugasanModal}
+        onClose={() => setShowSuccessPenugasanModal(false)}
+        title="Penugasan Berhasil Disimpan!"
+        message="Laporan pengaduan telah berhasil ditugaskan ke unit dan staf penanggung jawab."
+        badgeText="Penugasan Sukses"
+        details={
+          assignedSuccessData
+            ? [
+                { label: "ID Ticket", value: assignedSuccessData.id },
+                { label: "Unit Tujuan", value: assignedSuccessData.unitTujuan },
+                { label: "Petugas Ditugaskan", value: assignedSuccessData.petugas },
+                { label: "Catatan Tindak Lanjut", value: assignedSuccessData.catatan },
+                { label: "Status Baru", value: "DIPROSES" },
+              ]
+            : []
+        }
+        primaryAction={{
+          text: "Selesai & Tutup",
+          onClick: () => setShowSuccessPenugasanModal(false),
+        }}
+      />
+
+      {/* MODAL KONFIRMASI HAPUS ISSUE */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteCandidateId(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Konfirmasi Hapus Laporan"
+        message={`Apakah Anda yakin ingin menghapus data laporan ${deleteCandidateId}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        variant="danger"
+        icon={Trash2}
+      />
     </div>
   );
 }

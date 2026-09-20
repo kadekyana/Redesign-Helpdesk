@@ -14,20 +14,27 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import { useMounted } from "@/hooks/useMounted";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     if (!localStorage.getItem("isLoggedIn")) {
       router.replace("/login");
     }
   }, [router, pathname]);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
     localStorage.removeItem("isLoggedIn");
     router.push("/login");
   };
@@ -65,7 +72,11 @@ export default function DashboardLayout({ children }) {
         </div>
         
         {/* LOGOUT BUTTON */}
-        <button onClick={handleLogout} className="p-2 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center group" title="Logout">
+        <button
+          onClick={handleLogoutClick}
+          className="p-2 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center group cursor-pointer"
+          title="Logout"
+        >
           <Power size={22} className="group-hover:text-red-400 transition-colors" />
         </button>
       </header>
@@ -109,6 +120,19 @@ export default function DashboardLayout({ children }) {
           </div>
         </main>
       </div>
+
+      {/* MODAL KONFIRMASI LOGOUT */}
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+        title="Konfirmasi Logout"
+        message="Apakah Anda yakin ingin keluar dari sistem MISSU? Sesi login Anda akan diakhiri dan Anda perlu memasukkan kredensial kembali untuk mengakses sistem."
+        confirmText="Ya, Keluar"
+        cancelText="Batal"
+        variant="danger"
+        icon={Power}
+      />
     </div>
   );
 }
