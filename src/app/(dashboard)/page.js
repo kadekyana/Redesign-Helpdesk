@@ -548,19 +548,21 @@ export default function DashboardPage() {
             </div>
 
             {/* Area Grafik */}
-            <div className="flex-1 flex mt-2 pl-10 relative">
+            <div className="flex-1 flex mt-3 relative">
+              {/* Y-axis Title (Rotated) */}
+              <div className="w-5 shrink-0 flex items-center justify-center pb-6 pointer-events-none">
+                <span className="-rotate-90 whitespace-nowrap text-[10px] text-gray-400 font-bold tracking-wider uppercase">
+                  Jumlah Issue
+                </span>
+              </div>
+
               {/* Y-axis Labels */}
-              <div className="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[11px] text-gray-500 font-semibold h-[calc(100%-1.5rem)] pr-2 text-right w-8 pointer-events-none">
+              <div className="w-9 shrink-0 flex flex-col justify-between text-[11px] text-gray-500 font-semibold h-[calc(100%-1.5rem)] pr-2 text-right leading-none pointer-events-none">
                 <span>20 -</span>
                 <span>15 -</span>
                 <span>10 -</span>
                 <span>5 -</span>
                 <span>0 -</span>
-              </div>
-
-              {/* Y-axis Title (Rotated) */}
-              <div className="absolute -left-6 top-1/2 -rotate-90 text-[10px] text-gray-400 font-bold tracking-wider -translate-y-1/2 uppercase pointer-events-none">
-                Jumlah Issue
               </div>
 
               {/* Bars Area with Dynamic Hover States */}
@@ -624,7 +626,7 @@ export default function DashboardPage() {
             </div>
 
             {/* X-Axis Labels */}
-            <div className="flex justify-around pl-10 pr-2 sm:pr-4 mt-3 text-[11px] font-semibold">
+            <div className="flex justify-around pl-14 pr-2 sm:pr-4 mt-3 text-[11px] font-semibold">
               {monthlyData.map((item, idx) => (
                 <span
                   key={item.month}
@@ -640,7 +642,7 @@ export default function DashboardPage() {
                 </span>
               ))}
             </div>
-            <div className="text-center text-[10px] text-gray-400 font-bold uppercase mt-2 pl-10 tracking-wider">
+            <div className="text-center text-[10px] text-gray-400 font-bold uppercase mt-2 pl-14 tracking-wider">
               Bulan
             </div>
           </div>
@@ -702,10 +704,10 @@ export default function DashboardPage() {
 
             <div className="flex-1 flex mt-2 pl-8 relative">
               {/* Background Grid Lines & Y-Axis */}
-              <div className="absolute left-0 top-0 bottom-6 w-full flex flex-col justify-between text-[11px] text-gray-400 font-medium h-[calc(100%-1.5rem)] pointer-events-none">
+              <div className="absolute left-8 right-0 top-0 bottom-6 flex flex-col justify-between text-[11px] text-gray-400 font-medium h-[calc(100%-1.5rem)] pointer-events-none">
                 {[50, 40, 30, 20, 10, 0].map((val) => (
                   <div key={val} className="flex items-center w-full h-0 relative">
-                    <span className="w-6 text-right pr-2 absolute -left-8 top-[-7px]">
+                    <span className="w-8 text-right pr-2 absolute -left-8 top-[-7px]">
                       {val}
                     </span>
                     <div className="flex-1 border-b border-gray-100"></div>
@@ -877,20 +879,20 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Floating Info / Toggle Button */}
-            <button
-              onClick={() => setIsGaugeExpanded(!isGaugeExpanded)}
-              className="absolute right-6 top-[68px] w-9 h-9 bg-[#6c8cd5] rounded-full flex items-center justify-center cursor-pointer shadow-md text-white hover:bg-[#5b7bc3] transition-transform active:scale-95 z-20"
-              title={isGaugeExpanded ? "Sembunyikan Rincian" : "Tampilkan Rincian"}
-            >
-              {isGaugeExpanded ? (
-                <Minus size={20} strokeWidth={2.5} />
-              ) : (
-                <Plus size={20} strokeWidth={2.5} />
-              )}
-            </button>
-
             <div className="flex-1 flex items-center justify-center relative mt-2">
+              {/* Floating Info / Toggle Button */}
+              <button
+                onClick={() => setIsGaugeExpanded(!isGaugeExpanded)}
+                className="absolute right-0 top-0 w-9 h-9 bg-[#6c8cd5] rounded-full flex items-center justify-center cursor-pointer shadow-md text-white hover:bg-[#5b7bc3] transition-transform active:scale-95 z-20"
+                title={isGaugeExpanded ? "Sembunyikan Rincian" : "Tampilkan Rincian"}
+              >
+                {isGaugeExpanded ? (
+                  <Minus size={20} strokeWidth={2.5} />
+                ) : (
+                  <Plus size={20} strokeWidth={2.5} />
+                )}
+              </button>
+
               {/* Container Grafik Gauge */}
               <div className="relative w-[340px] h-[340px] flex items-center justify-center">
                 {/* Labels Seputar Arc */}
@@ -914,7 +916,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Teks List Terpusat di rongga (gap) dengan Hover Interaktif */}
-                <div className="absolute left-[7%] top-[22%] flex flex-col items-end gap-1 font-bold text-[13px] tracking-wide z-20 bg-white/80 py-3.5 px-2.5 rounded-xl backdrop-blur-md shadow-xs border border-white/60">
+                <div className="absolute left-[4%] top-[10%] flex flex-col items-end gap-0.5 font-bold text-[12px] tracking-wide z-20 bg-white/85 py-2 px-2 rounded-xl backdrop-blur-md shadow-xs border border-white/60">
                   {currentQuality.dimensions.map((dim) => {
                     const isHovered = hoveredDimension === dim.id;
                     return (
